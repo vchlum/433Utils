@@ -11,10 +11,17 @@
 #include "RCSwitch.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
      
      
 RCSwitch mySwitch;
  
+void getBin(int num, char *str) {
+     *(str+5) = '\0';
+     int mask = 0x10 << 1;
+     while(mask >>= 1)
+     *str++ = !!(mask & num) + '0';
+  }
 
 
 int main(int argc, char *argv[]) {
@@ -23,6 +30,7 @@ int main(int argc, char *argv[]) {
      // Consult https://projects.drogon.net/raspberry-pi/wiringpi/pins/
      // for more information.
      int PIN = 2;
+     char bincode[300];
      
      if(wiringPiSetup() == -1) {
        printf("wiringPiSetup failed, exiting...");
@@ -36,18 +44,26 @@ int main(int argc, char *argv[]) {
 	 if (pulseLength != 0) mySwitch.setPulseLength(pulseLength);
      mySwitch.enableReceive(PIN);  // Receiver on interrupt 0 => that is pin #2
      
-    
      while(1) {
   
       if (mySwitch.available()) {
     
-        int value = mySwitch.getReceivedValue();
+        unsigned int value = mySwitch.getReceivedValue();
     
         if (value == 0) {
           printf("Unknown encoding\n");
         } else {    
    
-          printf("Received %i\n", mySwitch.getReceivedValue() );
+          int n, c, k;
+          for (c = 100; c >= 0; c--)  {
+            k = value >> c;
+            if (k & 1)
+              printf("1");
+            else
+              printf("0");
+            }
+          printf("\n");
+          printf("Received %lu\n", mySwitch.getReceivedValue() );
         }
     
         mySwitch.resetAvailable();

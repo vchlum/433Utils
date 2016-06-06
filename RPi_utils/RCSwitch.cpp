@@ -489,7 +489,7 @@ unsigned int* RCSwitch::getReceivedRawdata() {
  */
 bool RCSwitch::receiveProtocol1(unsigned int changeCount){
     
-	  unsigned long code = 0;
+	  long long code = 0;
       unsigned long delay = RCSwitch::timings[0] / 31;
       unsigned long delayTolerance = delay * RCSwitch::nReceiveTolerance * 0.01;    
 

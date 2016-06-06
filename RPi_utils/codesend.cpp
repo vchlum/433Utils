@@ -24,14 +24,14 @@ int main(int argc, char *argv[]) {
     int PIN = 0;
     
     // Parse the firt parameter to this command as an integer
-    int code = atoi(argv[1]);
+    unsigned long code = atoll(argv[1]);
     
     if (wiringPiSetup () == -1) return 1;
-	printf("sending code[%i]\n", code);
+	printf("sending code[%lu]\n", code);
 	RCSwitch mySwitch = RCSwitch();
 	mySwitch.enableTransmit(PIN);
     
-    mySwitch.send(code, 24);
+    mySwitch.send(code, 32);
     
 	return 0;
 
